@@ -10,18 +10,25 @@ function App() {
         setIsSidebarOpen(!isSidebarOpen)
     }
 
+    const [users, setUsers] = useState([])
+
+    const addUser = (user) => {
+        setUsers([...users, user])
+    }
+    const removeUser = (user) => {
+        setUsers(users.filter(u => u.id !== user.id))
+    }
+
     return (
         <div className="d-flex flex-column vh-100">
             <header>
                 <nav className="navbar navbar-dark bg-dark">
-                    <div className="container p-1">
-                        <h1 className="navbar-brand">MSC Mini Project</h1>
-                    </div>
+                    <a className="navbar-brand nav-item p-2" href={"/"}>MSC Mini Project</a>
                 </nav>
             </header>
             <div className="d-flex flex-grow-1">
                 <aside style={{display: isSidebarOpen ? 'block' : 'none'}} className="col-2">
-                    <SideBar className={"bg-warning"} style={{height:'100%'}}/>
+                    <SideBar className={"bg-warning"} style={{height:'100%'}} users={users} addUser={addUser} removeUser={removeUser}/>
                 </aside>
                 <main className="flex-grow-1">
                     <MapView className={"bg-info"} style={{height:'100%'}}/>
