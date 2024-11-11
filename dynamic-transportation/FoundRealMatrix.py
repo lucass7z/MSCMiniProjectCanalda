@@ -2,6 +2,7 @@ from operator import contains, le
 import pandas as pd
 import road
 
+
 def transitive_closure(matrix):
     length = len(matrix)
     for k in range(length):
@@ -23,13 +24,14 @@ def transitive_closure(matrix):
             if i == k:
                 matrix[k][i] = None
     return matrix
+
 def main():
     try:
         matrixExcel = pd.read_excel('dynamic-transportation/MatriceAdjacente.xlsx')
         matrixExcel.set_index('Location', inplace=True)
         return matrixExcel
     except:
-        matrixExcel = pd.read_excel('MatriceAdj.xlsx')
+        matrixExcel = pd.read_excel('dynamic-transportation/MatriceAdj.xlsx')
         nb_locations = matrixExcel.shape[0]
         matrix = [[None for _ in range(nb_locations)] for _ in range(nb_locations)]
         

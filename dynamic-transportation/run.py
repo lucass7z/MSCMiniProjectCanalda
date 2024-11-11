@@ -1,5 +1,8 @@
 import FoundRealMatrix
 import pandas as pd
+from flask import Flask, jsonify, request
+from flask_cors import CORS  # Importer l'extension CORS
+
 
 def split_matrix(matrix):
     matrix = pd.DataFrame(matrix)
@@ -72,6 +75,7 @@ def findRDV(locations, matrix):
             print(f"User {user} takes {time_to_best_location} minutes from {loc_name} to reach {best_location} by {type_matrix.at[loc_name, best_location]}")
         user += 1
     print(f"Normally in {max(maxTime)} minutes, all users will be at the meeting point.")
+    return best_location
 def main() -> None:
     try:
         nbUser = int(input("Enter the number of users: "))
@@ -84,5 +88,34 @@ def main() -> None:
         print("Please enter a valid number superior to 1")
         main()
     
+    
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/run-python', methods=['POST'])
+def api_main():
+    if request.is_json:
+        # Récupérer les données JSON envoyées dans la requête
+        data = request.get_json()
+        
+        # Afficher les données dans la console
+        print("Données reçues:", data)
+        try:
+            nbUser = data['nbUsers']
+            locations = data['locations']
+            if nbUser <= 1:
+                raise ValueError
+            matrix = FoundRealMatrix.main()
+            foundRDV = findRDV(locations, matrix)
+            request_data = {
+                "best_location": foundRDV
+            }
+            
+            return jsonify(request_data)
+        except ValueError:
+            print("Please enter a valid number superior to 1")
+            main()
+
+
 if __name__ == '__main__':
-    main()
+    app.run(debug=True)
