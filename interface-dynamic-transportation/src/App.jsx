@@ -33,6 +33,7 @@ function App() {
 
     const addUser = (user) => {
         setUsers([...users, user])
+        setRdv(null)
     }
     const removeUser = (user) => {
         setUsers(users.filter(u => u.id !== user.id))
@@ -44,6 +45,8 @@ function App() {
     }
 
     const [rdv, setRdv] = useState(null)
+    const [paths, setPaths] = useState([])
+    const [maxTime, setMaxTime] = useState(null)
 
     const makeRdv = async () => {
         try {
@@ -52,9 +55,12 @@ function App() {
                 locations : users.map(u => u.location.id)
             });
             setRdv(getLocationByName(response.data['best_location']));
+            setPaths(response.data['paths']);
+            setMaxTime(response.data['max_time']);
         } catch (error) {
             console.error('Error executing Python code:', error);
         }
+
     };
 
     return (
@@ -66,10 +72,10 @@ function App() {
             </header>
             <div className="d-flex flex-grow-1">
                 <aside style={{display: isSidebarOpen ? 'block' : 'none'}} className="col-2">
-                    <SideBar className={"bg-warning"} style={{height:'100%'}} users={users} addUser={addUser} removeUser={removeUser} locationList={locationList} makeRdv={makeRdv}/>
+                    <SideBar className={"bg-warning"} style={{height:'100%'}} users={users} addUser={addUser} removeUser={removeUser} locationList={locationList} makeRdv={makeRdv} maxTime={maxTime} rdv={rdv}/>
                 </aside>
                 <main className="flex-grow-1">
-                    <MapView className={"bg-info"} style={{height:'100%'}} locationList={locationList} users={users} rdv={rdv}/>
+                    <MapView className={"bg-info"} style={{height:'100%'}} locationList={locationList} users={users} rdv={rdv} paths={paths}/>
                 </main>
             </div>
             <footer className="bg-dark text-white text-center py-3 mt-auto">

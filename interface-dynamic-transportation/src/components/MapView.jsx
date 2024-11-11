@@ -33,9 +33,10 @@ const redIcon = new L.Icon({
  * MapView component
  * @param {{id: number, name: string, location: {id: number, name: string, lat: number, lng:number} | null}[]} users
  * @param {{id: number, name: string, lat: number, lng:number}} rdv
+ * @param {string[]}paths
  * @param rest
  */
-export function MapView({ users, rdv, ...rest }) {
+export function MapView({ users, rdv, paths, ...rest }) {
     // Filtrer les utilisateurs avec des coordonnées de location valides
     const validLocations = users
         .filter(user => user && user.location)
@@ -64,7 +65,7 @@ export function MapView({ users, rdv, ...rest }) {
                     <Marker key={index} position={[loc.lat, loc.lng]}>
                         <Popup>{users.find(user => user && user.location === loc)?.name || "Unknown"} at {users.find(user => user && user.location === loc)?.location.name || "Unknown"}</Popup>
                     </Marker>
-                        {rdv &&  <Polyline positions={[[loc.lat, loc.lng], [rdv.lat, rdv.lng]]} color="blue" weight={3} dashArray="5,10"><Popup>Walk 5 min</Popup></Polyline>}
+                        {rdv &&  <Polyline positions={[[loc.lat, loc.lng], [rdv.lat, rdv.lng]]} color="blue" weight={3} dashArray="5,10"><Popup>{paths[index]}</Popup></Polyline>}
                     </>
             ))}
 

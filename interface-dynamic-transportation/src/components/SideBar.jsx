@@ -8,9 +8,11 @@ import {useState} from "react";
  * @param {(user: {id: number, name: string, location: {id: number, name: string, lat: number, lng:number}}) => void} removeUser
  * @param {location: {id: number, name: string, lat: number, lng:number}[]} locationList
  * @param {()=>void}makeRdv
+ * @param {int}maxTime
+ * @param rdv
  * @param rest
  */
-export function SideBar({users, addUser, removeUser, locationList, makeRdv,...rest}) {
+export function SideBar({users, addUser, removeUser, locationList, makeRdv, maxTime, rdv,...rest}) {
     const [id,setId] = useState(0)
     const [name,setName] = useState('User 1')
     const [locationId, setLocationId] = useState(locationList[0].id)
@@ -58,6 +60,7 @@ export function SideBar({users, addUser, removeUser, locationList, makeRdv,...re
                 <button type="submit" onClick={() => addNewUser()}>Add {name}</button>
             </div>
             <button onClick={makeRdv} disabled={users.length<2}>Make a Rendez Vous</button>
+            {rdv && <p>The Rendez vous will be take place in {maxTime} minutes maximum</p>}
         </div>
     )
 }

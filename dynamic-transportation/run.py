@@ -66,16 +66,19 @@ def findRDV(locations, matrix):
     user = 1
     maxTime = [0]
     # Afficher le temps pour chaque location d'atteindre la meilleure location avec le type de transport
+    tabs = []
     for loc_name in locations_names:
         time_to_best_location = matrix.at[loc_name, best_location]
         if loc_name == best_location:
             print(f"User {user} will not move.")
+            tabs.append(f"He/She will not move.")
         else:
             maxTime.append(time_to_best_location)
             print(f"User {user} takes {time_to_best_location} minutes from {loc_name} to reach {best_location} by {type_matrix.at[loc_name, best_location]}")
+            tabs.append(f"He/She will take {time_to_best_location} minutes to reach {best_location} by {type_matrix.at[loc_name, best_location]}")
         user += 1
     print(f"Normally in {max(maxTime)} minutes, all users will be at the meeting point.")
-    return best_location
+    return best_location, tabs, max(maxTime)
 def main() -> None:
     try:
         nbUser = int(input("Enter the number of users: "))
@@ -108,7 +111,9 @@ def api_main():
             matrix = FoundRealMatrix.main()
             foundRDV = findRDV(locations, matrix)
             request_data = {
-                "best_location": foundRDV
+                "best_location": foundRDV[0],
+                "paths": foundRDV[1],
+                "max_time": foundRDV[2]
             }
             
             return jsonify(request_data)
