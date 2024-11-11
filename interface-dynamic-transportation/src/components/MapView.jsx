@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import {MapContainer, Marker, Polyline, Popup, TileLayer, useMap} from 'react-leaflet';
 import L from 'leaflet';
 
 /**
@@ -60,15 +60,20 @@ export function MapView({ users, rdv, ...rest }) {
                 />
 
                 {validLocations.map((loc, index) => (
+                    <>
                     <Marker key={index} position={[loc.lat, loc.lng]}>
                         <Popup>{users.find(user => user && user.location === loc)?.name || "Unknown"} at {users.find(user => user && user.location === loc)?.location.name || "Unknown"}</Popup>
                     </Marker>
-                ))}
+                        {rdv &&  <Polyline positions={[[loc.lat, loc.lng], [rdv.lat, rdv.lng]]} color="blue" weight={3} dashArray="5,10"><Popup>Walk 5 min</Popup></Polyline>}
+                    </>
+            ))}
 
                 {rdv && (
-                    <Marker position={[rdv.lat, rdv.lng]} icon={redIcon}>
-                        <Popup>Rendez Vous at {rdv.name}</Popup>
-                    </Marker>
+                    <>
+                        <Marker position={[rdv.lat, rdv.lng]} icon={redIcon}>
+                            <Popup>Rendez Vous at {rdv.name}</Popup>
+                        </Marker>
+                    </>
                 )}
 
                 <MapBounds locations={validLocations} />
